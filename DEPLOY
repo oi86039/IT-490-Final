@@ -1,7 +1,24 @@
 #!/bin/bash
 
-echo "Enter file path to send:"
-read filepath
+#DEPLOY SCRIPT - should be placed in VC only. Replace omar dir and file names where necessary
+
+#Hostname
+if [ -z "$1" ]; then
+	echo "Enter Hostname of Destination VM: "
+	read name
+else
+	name=$1
+fi
+
+printf "\n"
+
+#Filename
+if [ -z "$2" ]; then
+	echo "Enter filename to send:"
+	read filename
+else 
+	filename=$2
+fi
 
 #Enter IP Address 
 #VC = version control server
@@ -10,10 +27,42 @@ read filepath
 #DB1-PROD = Database Production
 #DB2-PROD = Database Backup Production
 #RMQ-DEV = RabbitMQ Dev
-echo "Enter Destination VM (keyword or IP address)"
-read ip
+if [ -z "$3" ]; then
+	echo "Enter Destination VM IP (keyword or IP address): "
+	read ip
+else 
+	ip=$3
+fi 
 
-echo "Enter php folder to chmod"
-read phpFilepath
+#Place switch with all aliases here
 
-#sshpass -p \  rsync
+#PHP Code to CHMOD
+if [ -z "$4" ]; then
+       	echo "Enter php folder to chmod: "
+	read phpFilepath #IT490/IT-490
+else 
+	phpFilepath=$4
+fi
+
+FROM_PATH=/home/omar/Desktop
+
+sshpass -p " " ssh $name@$ip bash -c "whoami"
+
+#Copy and Backup version already on system
+sshpass -p " " ssh $name@$ip bash -c "'tar cvpzf /home/$name/Desktop/backups/BACKUP.tar.gz $phpFilepath; exit'"
+
+printf "\n-\n"
+
+#Send zip to other computer desktop (If backup is already there, don't send it)
+sshpass -p " " rsync -avzh $FROM_PATH/backups/$filename $name@$ip:/home/$name --ignore-existing
+
+printf "\n---\n"
+
+#Extract zip, overwrite old files and Chmod php files (-C extracts to specific directory)"
+sshpass -p " " ssh $name@$ip bash -c "'tar xvzf /home/$name/$filename -C /; cd $phpFilepath; chmod 755 *; exit'"
+
+
+
+printf "\n-----\n"
+
+echo Version Pushed to $ip!;
