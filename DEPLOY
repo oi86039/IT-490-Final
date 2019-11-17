@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "Enter file path to send:"
+read filepath
+
+#Enter IP Address 
+#VC = version control server
+#FE-DEV = Front End Dev
+#BE-QA = Back End QA
+#DB1-PROD = Database Production
+#DB2-PROD = Database Backup Production
+#RMQ-DEV = RabbitMQ Dev
+echo "Enter Destination VM (keyword or IP address)"
+read ip
+
+echo "Enter php folder to chmod"
+read phpFilepath
+
+#sshpass -p \  rsync

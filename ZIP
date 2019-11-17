@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PROJECT='/var/www/html/test'
+WWW_PATH='/var/www/html/'
+BACKUP_PATH='/home/omar/Desktop/backups'
+VERSION=test-$(date +%s)
+
+#Make backup folder if not there
+if [!-d $BACKUP_PATH] 
+then
+	mkdir -p $BACKUP_PATH
+	chmod +rw $BACKUP_PATH
+fi #fi = end if
+
+#change into web dir
+cd "$WWW_PATH"
+
+printf \n 
+
+#zip version commit (-create-verbose-print-zip-filename)
+tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $PROJECT
+
+echo Created version!
