@@ -2,22 +2,15 @@
 
 #DEPLOY SCRIPT - should be placed in VC only. Replace omar dir and file names where necessary
 
-#Hostname
-if [ -z "$1" ]; then
-	echo "Enter Hostname of Destination VM: "
-	read name
-else
-	name=$1
-fi
+BACKUP_PATH=/home/omar/Desktop/backups
 
-printf "\n"
 
 #Filename
-if [ -z "$2" ]; then
+if [ -z "$1" ]; then
 	echo "Enter filename to send:"
 	read filename
 else 
-	filename=$2
+	filename=$1
 fi
 
 #Enter IP Address 
@@ -27,24 +20,108 @@ fi
 #DB1-PROD = Database Production
 #DB2-PROD = Database Backup Production
 #RMQ-DEV = RabbitMQ Dev
-if [ -z "$3" ]; then
+if [ -z "$2" ]; then
 	echo "Enter Destination VM IP (keyword or IP address): "
 	read ip
 else 
-	ip=$3
+	ip=$2
 fi 
 
-#Place switch with all aliases here
+#IP ADDRESS ALIASES--------------------------------#
+#set to false (0) if manual ip given
+nameFound=1;
+
+case $ip in
+FE-DEV)
+    ip=192.168.15.7
+    name="omar"
+    ;;
+FE-QA)
+    ip=192.168.15.6
+    name="omar" 
+    ;;
+FE-PROD)
+    ip=192.168.15.8
+    name="omar"
+    ;;
+DB1-DEV)
+    ip=192.168.15.20
+    name="anwar"
+    ;;
+DB1-QA)
+    ip=192.168.15.24
+    name="anwar"
+    ;;
+DB1-PROD)
+    ip=192.168.15.19
+    name="anwar"
+    ;;
+#DB2-DEV)
+#    ip=192.168.15.7
+#    name="anwar"
+#    ;;
+#DB2-QA)
+#    ip=192.168.15.7
+#    name="anwar"
+#    ;;
+#DB2-PROD)
+#    ip=192.168.15.7
+#    name="anwar"
+#    ;;
+BE-DEV)
+    ip=192.168.15.16
+    name="hunter"
+    ;;
+BE-QA)
+    ip=192.168.15.21
+    name="hunter"
+    ;;
+BE-PROD)
+    ip=192.168.15.22
+    name="hunter"
+    ;;
+RMQ-DEV)
+    ip=192.168.15.10
+    name="nouman"
+    ;;
+RMQ-QA)
+    ip=192.168.15.25
+    name="nouman"
+    ;;
+RMQ-PROD)
+    ip=192.168.15.26
+    name="nouman"
+    ;;
+VC)
+    ip=192.168.15.23
+    name="hunter"
+    ;;
+TEST)
+    ip=192.168.15.12
+    name="omar"
+    ;;
+ *) #default
+    ip=ip
+    $nameFound=0
+    ;;
+esac
+#-----------------------------------------------#
+
+#Hostname
+if [ $nameFound -eq 0 ]; then
+	echo "Enter Hostname of Destination VM: "
+	read name
+fi
+
+printf "\n"
 
 #PHP Code to CHMOD
-if [ -z "$4" ]; then
+if [ -z "$3" ]; then
        	echo "Enter php folder to chmod: "
 	read phpFilepath #IT490/IT-490
 else 
-	phpFilepath=$4
+	phpFilepath=$3
 fi
-
-FROM_PATH=/home/omar/Desktop
 
 sshpass -p " " ssh $name@$ip bash -c "whoami"
 
@@ -54,7 +131,7 @@ sshpass -p " " ssh $name@$ip bash -c "'tar cvpzf /home/$name/Desktop/backups/BAC
 printf "\n-\n"
 
 #Send zip to other computer desktop (If backup is already there, don't send it)
-sshpass -p " " rsync -avzh $FROM_PATH/backups/$filename $name@$ip:/home/$name --ignore-existing
+sshpass -p " " rsync -avzh $BACKUP_PATH/$filename $name@$ip:/home/$name --ignore-existing
 
 printf "\n---\n"
 

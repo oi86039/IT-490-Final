@@ -20,4 +20,5 @@ printf \n
 #zip version commit (-create-verbose-print-zip-filename)
 tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $PROJECT
 
-echo Created version!
+printf "\n Created version successfully!\n"
+printf "$BACKUP_PATH/\n$(date -I)-$VERSION.tar.gz\n\n"
