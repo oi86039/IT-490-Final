@@ -1,0 +1,53 @@
+#!/bin/bash
+
+#DEPLOY SCRIPT - should be placed in VC only. Replace omar dir and file names where necessary
+
+BACKUP_PATH=/home/omar/Desktop/backups
+
+#Filename
+if [ -z "$1" ]; then
+	echo "Enter filename to send:"
+	read filename
+else 
+	filename=$1
+fi
+
+#Enter IP Address 
+#VC = version control server
+#TEST = Omar's Computer
+#VC
+#    ip=192.168.15.23
+#    name="hunter"
+#TEST
+    ip=192.168.15.12
+    name="omar"
+#-----------------------------------------------#
+
+printf "\n"
+
+#PHP Code to CHMOD
+if [ -z "$2" ]; then
+       	echo "Enter php folder to chmod: "
+	read phpFilepath #IT490/IT-490
+else 
+	phpFilepath=$2
+fi
+
+sshpass -p " " ssh $name@$ip bash -c "whoami"
+
+#Copy and Backup version already on system
+#sshpass -p " " ssh $name@$ip bash -c "'tar cvpzf /home/$name/Desktop/backups/BACKUP.tar.gz $phpFilepath; exit'"
+
+#printf "\n-\n"
+
+#Send zip to other computer desktop (If backup is already there, don't send it)
+sshpass -p " " rsync -avzh $BACKUP_PATH/$filename $name@$ip:/home/$name/VC_Folder --ignore-existing
+
+printf "\n---\n"
+
+#Extract zip, overwrite old files and Chmod php files (-C extracts to specific directory)"
+#sshpass -p " " ssh $name@$ip bash -c "'tar xvzf /home/$name/$filename -C /; cd $phpFilepath; chmod 755 *; exit'"
+
+#printf "\n-----\n"
+
+echo Version Pushed to VC!!;
