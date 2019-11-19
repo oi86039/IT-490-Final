@@ -102,7 +102,7 @@ TEST)
     ;;
  *) #default
     ip=ip
-    $nameFound=0
+    nameFound=0
     ;;
 esac
 #-----------------------------------------------#

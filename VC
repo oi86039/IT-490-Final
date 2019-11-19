@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#DEPLOY SCRIPT - should be placed in VC only. Replace omar dir and file names where necessary
+#VC SCRIPT - Push zip file specified to VC
 
 BACKUP_PATH=/home/omar/Desktop/backups
 
@@ -16,22 +16,14 @@ fi
 #VC = version control server
 #TEST = Omar's Computer
 #VC
-#    ip=192.168.15.23
-#    name="hunter"
+    ip=192.168.15.23
+    name="hunter"
 #TEST
-    ip=192.168.15.12
-    name="omar"
+#    ip=192.168.15.12
+#    name="omar"
 #-----------------------------------------------#
 
 printf "\n"
-
-#PHP Code to CHMOD
-if [ -z "$2" ]; then
-       	echo "Enter php folder to chmod: "
-	read phpFilepath #IT490/IT-490
-else 
-	phpFilepath=$2
-fi
 
 sshpass -p " " ssh $name@$ip bash -c "whoami"
 
@@ -41,7 +33,7 @@ sshpass -p " " ssh $name@$ip bash -c "whoami"
 #printf "\n-\n"
 
 #Send zip to other computer desktop (If backup is already there, don't send it)
-sshpass -p " " rsync -avzh $BACKUP_PATH/$filename $name@$ip:/home/$name/VC_Folder --ignore-existing
+sshpass -p " " rsync -avzh $BACKUP_PATH/$filename $name@$ip:/home/$name/Desktop/backups --ignore-existing
 
 printf "\n---\n"
 
