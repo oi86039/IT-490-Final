@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PROJECT='/var/www/html/test'
+BACKUP_PATH='/home/omar/Desktop/backups/CURR/BACKUP.tar.gz'
+
+#Prompt with warning
+echo WARNING: This will delete all code within $PROJECT and replace it with the contents of $BACKUP_PATH/BACKUP.tar.gz. Are you ok with this? \(y/n\)
+read conf
+
+if [ "$conf" != "y" ]; then
+
+	printf "\nK cool. Bye.\n"
+	exit
+fi
+
+#Delete project
+rm $PROJECT/*
+
+#Extract backup to Folder
+tar xvzf $BACKUP_PATH -C /
+
+printf "\n Rolled version backup successfully!\n"
+printf "\n\n"
