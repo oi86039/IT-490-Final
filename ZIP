@@ -1,9 +1,10 @@
 #!/bin/bash
 
-PROJECT='/var/www/html/test'
-WWW_PATH='/var/www/html/'
+#tar cvpzf /home/omar/Desktop/backups/test.tar.gz /var/www/html/test 
+
+PROJECT='/var/www/html/IT490'
 BACKUP_PATH='/home/omar/Desktop/backups'
-VERSION=test-$(date +%s)
+VERSION=IT-490-$(date +%s)
 
 #Make backup folder if not there
 if [!-d $BACKUP_PATH] 
@@ -12,13 +13,15 @@ then
 	chmod +rw $BACKUP_PATH
 fi #fi = end if
 
-#change into web dir
-cd "$WWW_PATH"
-
-printf \n 
+printf "\n" 
 
 #zip version commit (-create-verbose-print-zip-filename)
-tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $PROJECT
+exclude=$(</home/omar/Desktop/Final/EXCLUDE.config) #load exclude file
+#echo $exclude
 
+tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $exclude $PROJECT #zip all files except excluded ones.
+#echo tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $value $PROJECT
+
+#Finished!
 printf "\n Created version successfully!\n"
 printf "$BACKUP_PATH/\n$(date -I)-$VERSION.tar.gz\n\n"
