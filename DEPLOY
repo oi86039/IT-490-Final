@@ -14,24 +14,14 @@ else
 fi
 
 #Enter IP Address 
-#VC = version control server
-#FE-DEV = Front End Dev
-#BE-QA = Back End QA
-#DB1-PROD = Database Production
-#DB2-PROD = Database Backup Production
-#RMQ-DEV = RabbitMQ Dev
 if [ -z "$2" ]; then
-	echo "Enter Destination VM IP (keyword or IP address): "
-	read ip
-else 
-	ip=$2
+	echo "Enter Stage-Tier: "
+	read ipIN
 fi 
 
 #IP ADDRESS ALIASES--------------------------------#
-#set to false (0) if manual ip given
-nameFound=1;
 
-case $ip in
+case $ipIN in
 FE-DEV)
     ip=192.168.15.7
     name="omar"
@@ -101,17 +91,11 @@ TEST)
     name="omar"
     ;;
  *) #default
-    ip=ip
-    nameFound=0
+    printf "\n No valid stage-tier given. Exiting... \n"
+    exit
     ;;
 esac
 #-----------------------------------------------#
-
-#Hostname
-if [ $nameFound -eq 0 ]; then
-	echo "Enter Hostname of Destination VM: "
-	read name
-fi
 
 printf "\n"
 
@@ -123,6 +107,16 @@ else
 	phpFilepath=$3
 fi
 
+#Change file name based on if statement
+
+if [[ $ipIN == *DEV ]]; then
+	#run function to change ip in config file lines
+else
+	printf "FAAAAAAAAAAAAAK >:(\n"
+	exit
+fi
+
+#Print user of SSH
 sshpass -p " " ssh $name@$ip bash -c "whoami"
 
 #Copy and Backup version already on system
