@@ -17,6 +17,8 @@ fi
 if [ -z "$2" ]; then
 	echo "Enter Stage-Tier: "
 	read ipIN
+else
+	ipIN=$2
 fi 
 
 #IP ADDRESS ALIASES--------------------------------#
@@ -110,11 +112,14 @@ fi
 #Change file name based on if statement
 
 if [[ $ipIN == *DEV ]]; then
-	#run function to change ip in config file lines
+	ipINI='192.168.15.10'
+
 elif [[ $ipIN == *QA ]]; then
-	#run function to change ip in config file lines
-elif [[ $ipIN == *PROD ]]; then
-	#run function to change ip in config file lines
+	ipINI='192.168.15.25'
+
+elif [[ $ipIN == *PROD ]]; then	
+	ipINI='192.168.15.26'
+
 else
 	printf "FAAAAAAAAAAAAAK >:(\n"
 	exit
@@ -136,8 +141,18 @@ printf "\n---\n"
 #Extract zip, overwrite old files and Chmod php files (-C extracts to specific directory)"
 sshpass -p " " ssh $name@$ip bash -c "'tar xvzf /home/$name/$filename -C /; cd $phpFilepath; chmod 755 *; exit'"
 
-#For each line in config, sed it to replace the ip
+s="s/^BROKER_HOST.*/BROKER_HOST\ =\ $ipINI/"
 
+#For each line in config, sed it to replace the ip
+while read -r line; do
+#sed -i 's/^BROKER_HOST.*/BROKER_HOST = 192.168.15.10/' testRabbitMQ.ini 
+
+#/dev/null exits standard input and makes sure while loop runs correctly!
+sshpass -p " " ssh $name@$ip bash -c "'sed -i "$s" $line;exit;'" < /dev/null
+printf "\nSed -i $line"
+done < $INI_CONFIG
+
+#echo Sed Done?
 
 printf "\n-----\n"
 

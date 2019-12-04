@@ -1,6 +1,15 @@
+#!/bin/bash
+ip='192.168.15.5000'
+
+#$s='s/^BROKER_HOST.*/BROKER_HOST = 192.168.15.0/'
+
+#sed -i 's/^BROKER_HOST.*/BROKER_HOST = 192.168.15.10/' testRabbitMQ.ini 
+
+
 while read line; do
 
-sed -i 's/^BROKER_HOST.*/BROKER_HOST = 192.168.15.5000/' $line 
+sed -i 's/^BROKER_HOST.*/BROKER_HOST = '"$ip"'/' $line 
+
 echo $line
 done < /home/omar/Desktop/Final/INI.config
 
