@@ -3,7 +3,7 @@
 #DEPLOY SCRIPT - should be placed in VC only. Replace omar dir and file names where necessary
 
 BACKUP_PATH=/home/omar/Desktop/backups
-
+INI_CONFIG=/home/omar/Desktop/Final/INI.config
 
 #Filename
 if [ -z "$1" ]; then
@@ -36,27 +36,27 @@ FE-PROD)
     ;;
 DB1-DEV)
     ip=192.168.15.20
-    name="anwar"
+    name="anwarrs"
     ;;
 DB1-QA)
     ip=192.168.15.24
-    name="anwar"
+    name="anwarrs"
     ;;
 DB1-PROD)
     ip=192.168.15.19
-    name="anwar"
+    name="anwarrs"
     ;;
 #DB2-DEV)
 #    ip=192.168.15.7
-#    name="anwar"
+#    name="anwarrs"
 #    ;;
 #DB2-QA)
 #    ip=192.168.15.7
-#    name="anwar"
+#    name="anwarrs"
 #    ;;
 #DB2-PROD)
 #    ip=192.168.15.7
-#    name="anwar"
+#    name="anwarrs"
 #    ;;
 BE-DEV)
     ip=192.168.15.16
@@ -111,6 +111,10 @@ fi
 
 if [[ $ipIN == *DEV ]]; then
 	#run function to change ip in config file lines
+elif [[ $ipIN == *QA ]]; then
+	#run function to change ip in config file lines
+elif [[ $ipIN == *PROD ]]; then
+	#run function to change ip in config file lines
 else
 	printf "FAAAAAAAAAAAAAK >:(\n"
 	exit
@@ -132,6 +136,7 @@ printf "\n---\n"
 #Extract zip, overwrite old files and Chmod php files (-C extracts to specific directory)"
 sshpass -p " " ssh $name@$ip bash -c "'tar xvzf /home/$name/$filename -C /; cd $phpFilepath; chmod 755 *; exit'"
 
+#For each line in config, sed it to replace the ip
 
 
 printf "\n-----\n"

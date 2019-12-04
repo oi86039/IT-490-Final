@@ -1,0 +1,6 @@
+while read line; do
+
+sed -i 's/^BROKER_HOST.*/BROKER_HOST = 192.168.15.5000/' $line 
+echo $line
+done < /home/omar/Desktop/Final/INI.config
+
