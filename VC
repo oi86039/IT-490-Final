@@ -3,6 +3,7 @@
 #VC SCRIPT - Push zip file specified to VC
 
 BACKUP_PATH=/home/omar/Desktop/backups
+STAGE=frontEnd #Can be either frontEnd, backEnd, database, or rabbitMQ (case sensitive)
 
 #Filename
 if [ -z "$1" ]; then
@@ -13,33 +14,21 @@ else
 fi
 
 #Enter IP Address 
-#VC = version control server
-#TEST = Omar's Computer
-#VC
-    ip=192.168.15.23
-    name="hunter"
-#TEST
-#    ip=192.168.15.12
-#    name="omar"
+ip=192.168.15.23
+name="hunter"
+
 #-----------------------------------------------#
 
 printf "\n"
 
 sshpass -p " " ssh $name@$ip bash -c "whoami"
 
-#Copy and Backup version already on system
-#sshpass -p " " ssh $name@$ip bash -c "'tar cvpzf /home/$name/Desktop/backups/BACKUP.tar.gz $phpFilepath; exit'"
-
-#printf "\n-\n"
-
 #Send zip to other computer desktop (If backup is already there, don't send it)
-sshpass -p " " rsync -avzh $BACKUP_PATH/$filename $name@$ip:/home/$name/Desktop/backups --ignore-existing
+sshpass -p " " rsync -avzh $BACKUP_PATH/$filename $name@$ip:/home/$name/Desktop/backups/$STAGE --ignore-existing
+
+s='/version.config/d'
+sshpass -p " " ssh $name@$ip bash -c "'cd /home/$name/Desktop/backups/$STAGE; ls -1tr > version.config;sed -i '/version.config/d' version.config;cat version.config; exit'"
 
 printf "\n---\n"
-
-#Extract zip, overwrite old files and Chmod php files (-C extracts to specific directory)"
-#sshpass -p " " ssh $name@$ip bash -c "'tar xvzf /home/$name/$filename -C /; cd $phpFilepath; chmod 755 *; exit'"
-
-#printf "\n-----\n"
 
 echo Version Pushed to VC!!;

@@ -2,9 +2,9 @@
 
 #tar cvpzf /home/omar/Desktop/backups/test.tar.gz /var/www/html/test 
 
-PROJECT='/var/www/html/IT490'
+PROJECT='/var/www/html/test'
 BACKUP_PATH='/home/omar/Desktop/backups'
-VERSION=IT-490-$(date +%s)
+VERSION=TEST-$(date +%s)
 
 #Make backup folder if not there
 if [!-d $BACKUP_PATH] 
@@ -15,11 +15,11 @@ fi #fi = end if
 
 printf "\n" 
 
-#zip version commit (-create-verbose-print-zip-filename)
+#Exclude files that are specified in EXCLUDE.config (no longer necessary -_-)
 exclude=$(</home/omar/Desktop/Final/EXCLUDE.config) #load exclude file
-#echo $exclude
 
-tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $exclude $PROJECT #zip all files except excluded ones.
+#Zip version using tar (-create-verbose-print-zip-filename)
+tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $exclude $PROJECT
 #echo tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $value $PROJECT
 
 #Finished!
