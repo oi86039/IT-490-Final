@@ -2,7 +2,7 @@
 
 PROJECT='/var/www/html/test'
 WWW_PATH='/var/www/html/'
-BACKUP_PATH='/home/omar/Desktop/backups'
+BACKUP_PATH='/home/hunter/Desktop/backups'
 VERSION=test-$(date +%s)
 
 #Make backup folder if not there

@@ -2,8 +2,8 @@
 
 #DEPLOY SCRIPT - should be placed in VC only. Replace omar dir and file names where necessary
 
-BACKUP_PATH=/home/omar/Desktop/backups
-INI_CONFIG=/home/omar/Desktop/Final/INI.config
+BACKUP_PATH=/home/hunter/Desktop/backups
+INI_CONFIG=/home/hunter/Desktop/Final/INI.config
 
 #Filename
 if [ -z "$1" ]; then

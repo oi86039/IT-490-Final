@@ -2,7 +2,7 @@
 
 #VC SCRIPT - Push zip file specified to VC
 
-BACKUP_PATH=/home/omar/Desktop/backups
+BACKUP_PATH=/home/hunter/Desktop/backups
 
 #Filename
 if [ -z "$1" ]; then
