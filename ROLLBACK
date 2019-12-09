@@ -13,7 +13,7 @@ if [ "$conf" != "y" ]; then
 	exit
 fi
 
-ipIN=$(ip addr show | grep "inet " | grep -v "127.0.0.1/8" | awk '{print $2}')
+ipIN=$(ip addr show | grep "inet " | grep -v "127.0.0.1/8" | awk '{print $2}' | head -n 1)
 
 echo $ipIN
 
@@ -25,16 +25,19 @@ case $ipIN in
     		ip=192.168.15.7
     		name="omar"
     		folder="frontEnd"
+		path="/var/www/html/IT490"
 		;;
 	192.168.15.6/24)
 	        ip=192.168.15.6
 	        name="omar"
 	        folder="frontEnd"
+		path="/var/www/html/IT490"
 	        ;;
 	192.168.15.8/24)
     		ip=192.168.15.8
     		name="omar"
     		folder="frontEnd"
+		path="/var/www/html/IT490"
     		;;
 	192.168.15.20/24)
 	        ip=192.168.15.20
@@ -55,44 +58,53 @@ case $ipIN in
     		ip=192.168.15.16
     		name="hunter"
     		folder="backEnd"
+		path="/home/hunter/Desktop/github-dir"
     		;;
 	192.168.15.21/24)
 	        ip=192.168.15.21
 	        name="hunter"
     		folder="backEnd"
+		path="/home/hunter/Desktop/github-dir"
     		;;
 	192.168.15.22/24)
     		ip=192.168.15.22
     		name="hunter"
     		folder="backEnd"
+		path="/home/hunter/Desktop/github-dir"
     		;;
 	192.168.15.10/24)
     		ip=192.168.15.10
     		name="nouman"
     		folder="rabbitMQ"
+		path="/home/nouman/IT490"
     		;;
 	192.168.15.25/24)
     		ip=192.168.15.25
     		name="nouman"
     		folder="rabbitMQ"
+		path="/home/nouman/IT490"
     		;;
 	192.168.15.26/24)
     		ip=192.168.15.26
     		name="nouman"
     		folder="rabbitMQ"
+		path="/home/nouman/IT490"
     		;;
 	192.168.15.23/24)
     		ip=192.168.15.23
     		name="hunter"
     		folder="VCtest"
+		path="/home/hunter/Desktop/Final"
     		;;
 	10.0.3.15/24)
     		ip=10.0.3.15
     		name="hunter"
     		folder="testVM"
+		path="/home/hunter/Desktop/Final"
     		;;
 	1.1.1.1)
 		echo "It fricken got it"
+		exit
 		;;
 	*)
     		printf "\n No valid stage-tier given. Exiting... \n"
@@ -108,23 +120,25 @@ echo "It worked!!! \\(^o^)/"
 #Delete project
 #rm $PROJECT/*
 
-sshpass -p ' ' ssh $name@$ip 'export $folder; bash' << EOF
-cd Desktop/backups/$folder;
-sed -i '$ d' version.config;
-tail -n 1 version.config > rollback.txt
-exit;
+echo $folder
+
+sshpass -p ' ' ssh hunter@192.168.15.23 -t export "$folder"; bash << EOF
+cd
+cd /home/hunter/Desktop/backups/$folder
+sed -i '$ d' version.config
+touch rollback2.txt
+tail -n 1 version.config > rollback2.txt
+exit
 EOF
 #Extract backup to Folder
 #tar xvzf $BACKUP_PATH -C /
-#$sshpass -p " " ssh $name@$ip bash -c "whoami"
+#sshpass -p " " ssh $name@$ip bash -c "whoami"
 
-sshpass -p ' ' scp hunter@10.0.3.15:/home/hunter/Desktop/backups/frontEnd/rollback.txt /home/hunter/Desktop/Final
+sshpass -p ' ' scp hunter@192.168.15.23:/home/hunter/Desktop/backups/$folder/rollback2.txt $path
+var=`tail -n 1 rollback2.txt`
+sshpass -p ' ' scp hunter@192.168.15.23:/home/hunter/Desktop/backups/$folder/$var $path
 
-var=`tail -n 1 rollback.txt`
-
-sshpass -p ' ' scp hunter@10.0.3.15:/home/hunter/Desktop/backups/frontEnd/$var /home/hunter/Desktop/Final
-
-rm rollback.txt
+rm rollback2.txt
 
 printf "\n Rolled version backup successfully!\n"
 printf "\n\n"
