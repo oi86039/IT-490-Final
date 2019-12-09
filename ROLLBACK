@@ -13,91 +13,103 @@ if [ "$conf" != "y" ]; then
 	exit
 fi
 
+ipIN=$(ip addr show | grep "inet " | grep -v "127.0.0.1/8" | awk '{print $2}')
+
+echo $ipIN
+
 #IP ADDRESS ALIASES--------------------------------#
 
 
-<< 'MULTILINE-COMMENT'
 case $ipIN in
-FE-DEV)
-    ip=192.168.15.7
-    name="omar"
-    ;;
-FE-QA)
-    ip=192.168.15.6
-    name="omar"
-    ;;
-FE-PROD)
-    ip=192.168.15.8
-    name="omar"
-    ;;
-DB1-DEV)
-    ip=192.168.15.20
-    name="anwarrs"
-    ;;
-DB1-QA)
-    ip=192.168.15.24
-    name="anwarrs"
-    ;;
-DB1-PROD)
-    ip=192.168.15.19
-    name="anwarrs"
-    ;;
-#DB2-DEV)
-#    ip=192.168.15.7
-#    name="anwarrs"
-#    ;;
-#DB2-QA)
-#    ip=192.168.15.7
-#    name="anwarrs"
-#    ;;
-#DB2-PROD)
-#    ip=192.168.15.7
-#    name="anwarrs"
-#    ;;
-BE-DEV)
-    ip=192.168.15.16
-    name="hunter"
-    ;;
-BE-QA)
-    ip=192.168.15.21
-    name="hunter"
-    ;;
-BE-PROD)
-    ip=192.168.15.22
-    name="hunter"
-    ;;
-RMQ-DEV)
-    ip=192.168.15.10
-    name="nouman"
-    ;;
-RMQ-QA)
-    ip=192.168.15.25
-    name="nouman"
-    ;;
-RMQ-PROD)
-    ip=192.168.15.26
-    name="nouman"
-    ;;
-VC)
-    ip=192.168.15.23
-    name="hunter"
-    ;;
-TEST)
-    ip=192.168.15.12
-    name="omar"
-    ;;
- *) #default
-    printf "\n No valid stage-tier given. Exiting... \n"
-    exit
-    ;;
+       	192.168.15.7/24)
+    		ip=192.168.15.7
+    		name="omar"
+    		folder="frontEnd"
+		;;
+	192.168.15.6/24)
+	        ip=192.168.15.6
+	        name="omar"
+	        folder="frontEnd"
+	        ;;
+	192.168.15.8/24)
+    		ip=192.168.15.8
+    		name="omar"
+    		folder="frontEnd"
+    		;;
+	192.168.15.20/24)
+	        ip=192.168.15.20
+    		name="anwarrs"
+    		folder="database"
+    		;;
+	192.168.15.24/24)
+	        ip=192.168.15.24
+    		name="anwarrs"
+    		folder="database"
+    		;;
+	192.168.15.19/24)
+	        ip=192.168.15.19
+    		name="anwarrs"
+    		folder="database"
+    		;;
+	192.168.15.16/24)
+    		ip=192.168.15.16
+    		name="hunter"
+    		folder="backEnd"
+    		;;
+	192.168.15.21/24)
+	        ip=192.168.15.21
+	        name="hunter"
+    		folder="backEnd"
+    		;;
+	192.168.15.22/24)
+    		ip=192.168.15.22
+    		name="hunter"
+    		folder="backEnd"
+    		;;
+	192.168.15.10/24)
+    		ip=192.168.15.10
+    		name="nouman"
+    		folder="rabbitMQ"
+    		;;
+	192.168.15.25/24)
+    		ip=192.168.15.25
+    		name="nouman"
+    		folder="rabbitMQ"
+    		;;
+	192.168.15.26/24)
+    		ip=192.168.15.26
+    		name="nouman"
+    		folder="rabbitMQ"
+    		;;
+	192.168.15.23/24)
+    		ip=192.168.15.23
+    		name="hunter"
+    		folder="VCtest"
+    		;;
+	10.0.3.15/24)
+    		ip=10.0.3.15
+    		name="hunter"
+    		folder="testVM"
+    		;;
+	1.1.1.1)
+		echo "It fricken got it"
+		;;
+	*)
+    		printf "\n No valid stage-tier given. Exiting... \n"
+    		exit
+    		;;
 esac
+
+echo "It worked!!! \\(^o^)/"
+#exit
+
+
 #-----------------------------------------------#
-MULTILINE-COMMENT
 #Delete project
 #rm $PROJECT/*
 
-sshpass -p ' ' ssh "hunter@10.0.3.15" << EOF
-cd Desktop/backups/frontEnd;
+sshpass -p ' ' ssh $name@$ip 'export $folder; bash' << EOF
+cd Desktop/backups/$folder;
 sed -i '$ d' version.config;
 tail -n 1 version.config > rollback.txt
 exit;
