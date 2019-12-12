@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROJECT='/home/hunter/Desktop/testdir' #Please put the path to your PROJECT folder here
-BACKUP='testVM' #Please put your Folder name in VC here
+STAGE='testVM' #Please put your Folder name in VC here
 
 #Prompt with warning
 echo WARNING: This will delete all code within $PROJECT and replace it with the contents of $BACKUP_PATH/BACKUP.tar.gz. Are you ok with this? \(y/n\)
@@ -13,11 +13,11 @@ if [ "$conf" != "y" ]; then
 	exit
 fi
 #Delete project
-#rm -r $PATH/*
+rm -rv $PROJECT/*
 
-sshpass -p ' ' ssh hunter@10.0.3.15 -t export "$BACKUP"; bash << EOF
+sshpass -p ' ' ssh hunter@10.0.3.15 -t export "$STAGE"; bash << EOF
 cd
-cd /home/hunter/Desktop/backups/$BACKUP
+cd /home/hunter/Desktop/backups/$STAGE
 sed -i '$ d' version.config
 touch rollback2.txt
 tail -n 1 version.config > rollback2.txt
@@ -25,13 +25,15 @@ exit
 EOF
 #Extract backup to Folder
 #tar xvzf $BACKUP_PATH -C /
-#sshpass -p " " ssh $name@$ip bash -c "whoami"
 
-sshpass -p ' ' scp hunter@10.0.3.15:/home/hunter/Desktop/backups/$BACKUP/rollback2.txt .
+sshpass -p ' ' scp hunter@10.0.3.15:/home/hunter/Desktop/backups/$STAGE/rollback2.txt .
 var=`tail -n 1 rollback2.txt`
-sshpass -p ' ' scp hunter@10.0.3.15:/home/hunter/Desktop/backups/$BACKUP/$var $PROJECT
+sshpass -p ' ' scp hunter@10.0.3.15:/home/hunter/Desktop/backups/$STAGE/$var $PROJECT
 
 rm rollback2.txt
+
+#Extract backup to Folder
+tar xvzf $PROJECT/$var -C $PROJECT
 
 printf "\n Rolled version backup successfully!\n"
 printf "\n\n"
