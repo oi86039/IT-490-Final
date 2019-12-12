@@ -16,7 +16,7 @@ fi #fi = end if
 printf "\n" 
 
 #Exclude files that are specified in EXCLUDE.config (no longer necessary -_-)
-exclude=$(</home/omar/Desktop/Final/EXCLUDE.config) #load exclude file
+exclude=$(<./EXCLUDE.config) #load exclude file
 
 #Zip version using tar (-create-verbose-print-zip-filename)
 tar cvpzf $BACKUP_PATH/$(date -I)-$VERSION.tar.gz $exclude $PROJECT
