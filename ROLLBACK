@@ -15,15 +15,9 @@ fi
 #Delete project
 rm -rv $PROJECT/*
 
-sshpass -p ' ' ssh hunter@192.168.15.23 -t export "$STAGE"; << HERE
-hostname;
-cd;
-cd /home/hunter/Desktop/backups/$STAGE;
-sed -i '$ d' version.config;
-touch rollback2.txt;
-tail -n 1 version.config > rollback2.txt;
-exit;
-HERE
+sshpass -p ' ' ssh hunter@192.168.15.23 hostname;cd;cd /home/hunter/Desktop/backups/$STAGE;sed -i '$ d' version.config;touch rollback2.txt;tail -n 1 version.config > rollback2.txt;
+
+
 #Extract backup to Folder
 #tar xvzf $BACKUP_PATH -C /
 
