@@ -4,7 +4,7 @@ PROJECT='/home/hunter/Desktop/testdir' #Please put the path to your PROJECT fold
 STAGE='testVM' #Please put your Folder name in VC here
 
 #Prompt with warning
-echo WARNING: This will delete all code within $PROJECT and replace it with the contents of $BACKUP_PATH/BACKUP.tar.gz. Are you ok with this? \(y/n\)
+echo WARNING: This will delete all code within $PROJECT and replace it with the contents of the previous version from Version Control. Are you ok with this? \(y/n\)
 read conf
 
 if [ "$conf" != "y" ]; then

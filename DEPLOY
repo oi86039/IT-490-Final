@@ -21,76 +21,98 @@ else
 	ipIN=$2
 fi 
 
+#Enter path to deploy to 
+if [ -z "$3" ]; then
+	echo "Enter Path to Deploy to: "
+	read path
+else
+	path=$3
+fi 
+
 #IP ADDRESS ALIASES--------------------------------#
 
 case $ipIN in
 FE-DEV)
     ip=192.168.15.7
     name="omar"
+    STAGE="frontEnd"
     ;;
 FE-QA)
     ip=192.168.15.6
-    name="omar" 
+    name="omar"
+    STAGE="frontEnd"
     ;;
 FE-PROD)
     ip=192.168.15.8
     name="omar"
+    STAGE="frontEnd"
     ;;
 DB1-DEV)
-    ip=192.168.15.20
+    ip=192.168.15.9
     name="anwarrs"
+    STAGE="database"
     ;;
 DB1-QA)
     ip=192.168.15.24
     name="anwarrs"
+    STAGE="database"
     ;;
 DB1-PROD)
     ip=192.168.15.19
     name="anwarrs"
+    STAGE="database"
     ;;
-#DB2-DEV)
-#    ip=192.168.15.7
-#    name="anwarrs"
-#    ;;
-#DB2-QA)
-#    ip=192.168.15.7
-#    name="anwarrs"
-#    ;;
-#DB2-PROD)
-#    ip=192.168.15.7
-#    name="anwarrs"
-#    ;;
+DB2-DEV)
+    ip=192.168.15.200
+    name="anwarrs"
+    ;;
+DB2-QA)
+    ip=192.168.15.29
+    name="anwarrs"
+    ;;
+DB2-PROD)
+    ip=192.168.15.30
+    name="anwarrs"
+    ;;
 BE-DEV)
     ip=192.168.15.16
     name="hunter"
+    STAGE="backEnd"
     ;;
 BE-QA)
     ip=192.168.15.21
     name="hunter"
+    STAGE="backEnd"
     ;;
 BE-PROD)
     ip=192.168.15.22
     name="hunter"
+    STAGE="backEnd"
     ;;
 RMQ-DEV)
     ip=192.168.15.10
     name="nouman"
+    STAGE="rabbitMQ"
     ;;
 RMQ-QA)
     ip=192.168.15.25
     name="nouman"
+    STAGE="rabbitMQ"
     ;;
 RMQ-PROD)
     ip=192.168.15.26
     name="nouman"
+    STAGE="rabbitMQ"
     ;;
 VC)
     ip=192.168.15.23
     name="hunter"
+    STAGE="testVM"
     ;;
 TEST)
     ip=192.168.15.12
     name="omar"
+    STAGE="testVM"
     ;;
  *) #default
     printf "\n No valid stage-tier given. Exiting... \n"
@@ -134,12 +156,12 @@ sshpass -p " " ssh $name@$ip bash -c "'tar cvpzf /home/$name/Desktop/backups/BAC
 printf "\n-\n"
 
 #Send zip to other computer desktop (If backup is already there, don't send it)
-sshpass -p " " rsync -avzh $BACKUP_PATH/$filename $name@$ip:/home/$name --ignore-existing
+sshpass -p " " rsync -avzh $BACKUP_PATH/$STAGE/$filename $name@$ip:/home/$name --ignore-existing
 
 printf "\n---\n"
 
 #Extract zip, overwrite old files and Chmod php files (-C extracts to specific directory)"
-sshpass -p " " ssh $name@$ip bash -c "'tar xvzf /home/$name/$filename -C /; cd $phpFilepath; chmod 755 *; exit'"
+sshpass -p " " ssh $name@$ip bash -c "'tar xvzf /home/$name/$filename -C $path; cd $phpFilepath; chmod 755 *; exit'"
 
 s="s/^BROKER_HOST.*/BROKER_HOST\ =\ $ipINI/"
 
