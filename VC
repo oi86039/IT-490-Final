@@ -26,8 +26,8 @@ sshpass -p " " ssh $name@$ip bash -c "whoami"
 #Send zip to other computer desktop (If backup is already there, don't send it)
 sshpass -p " " rsync -avzh $BACKUP_PATH/$filename $name@$ip:/home/$name/Desktop/backups/$STAGE --ignore-existing
 
-s='/version.config/d'
-sshpass -p " " ssh $name@$ip bash -c "'cd /home/$name/Desktop/backups/$STAGE; ls -1tr > version.config;sed -i '/version.config/d' version.config;cat version.config; exit'"
+#
+sshpass -p " " ssh $name@$ip bash -c "'cd /home/$name/Desktop/Final;./VREFRESH /home/$name/Desktop/backups/$STAGE; exit'"
 
 printf "\n---\n"
 
