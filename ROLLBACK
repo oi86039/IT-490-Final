@@ -1,34 +1,36 @@
 #!/bin/bash
 
-PROJECT='/var/www/html/test' #Please put the path to your PROJECT folder here
+DELETE_PATH='/var/www/html/test' #Please put the path to your PROJECT folder here
+EXTRACT_PATH='/' # Please put path to extract to here
 STAGE='frontEnd' #Please put your Folder name in VC here
 
 #Prompt with warning
-echo WARNING: This will delete all code within $PROJECT and replace it with the contents of $BACKUP_PATH/BACKUP.tar.gz. Are you ok with this? \(y/n\)
+echo WARNING: This will delete all code within $DELETE_PATH and replace it with the contents of a previous version from Version Control. Are you ok with this? \(y/n\)
 read conf
 
 if [ "$conf" != "y" ]; then
 
-	printf "\nK cool. Bye.\n"
+	printf "\nRollback cancelled!\n"
 	exit
 fi
 #Delete project
-rm -rv $PROJECT/*
+rm -rv $DELETE_PATH/*
 
 #CD to folder, erase last ine of version.config, Get last version name
 sshpass -p ' ' ssh hunter@192.168.15.23 bash -c "whoami;cd /home/hunter/Desktop/backups/$STAGE;pwd;sed -i '$ d' version.config;touch rollback2.txt;tail -n 1 version.config > rollback2.txt;"
 
 #Extract backup to Folder
-#tar xvzf $BACKUP_PATH -C /
 echo "Done with SSH"
 sshpass -p ' ' scp hunter@192.168.15.23:/home/hunter/Desktop/backups/$STAGE/rollback2.txt .
 var=`tail -n 1 rollback2.txt`
-sshpass -p ' ' scp hunter@192.168.15.23:/home/hunter/Desktop/backups/$STAGE/$var $PROJECT
-
-rm rollback2.txt
+sshpass -p ' ' scp hunter@192.168.15.23:/home/hunter/Desktop/backups/$STAGE/$var $EXTRACT_PATH
 
 #Extract backup to Folder
-tar xvzf $PROJECT/$var -C $PROJECT
+tar xvzf $EXTRACT_PATH/$var -C $EXTRACT_PATH
+
+#Remove temporary files
+rm -v rollback2.txt
+sshpass -p ' ' ssh hunter@192.168.15.23 bash -c "'rm -v /home/hunter/Desktop/backups/$STAGE/rollback2.txt'"
 
 printf "\n Rolled version backup successfully!\n"
 printf "\n\n"
