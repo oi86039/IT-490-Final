@@ -15,20 +15,20 @@ fi
 #Delete project
 rm -rv $PROJECT/*
 
-sshpass -p ' ' ssh hunter@10.0.3.15 -t export "$STAGE"; bash << EOF
-cd
-cd /home/hunter/Desktop/backups/$STAGE
-sed -i '$ d' version.config
-touch rollback2.txt
-tail -n 1 version.config > rollback2.txt
-exit
+sshpass -p ' ' ssh hunter@192.168.15.23 -t export "$STAGE"; bash << EOF
+cd;
+cd /home/hunter/Desktop/backups/$STAGE;
+sed -i '$ d' version.config;
+touch rollback2.txt;
+tail -n 1 version.config > rollback2.txt;
+exit;
 EOF
 #Extract backup to Folder
 #tar xvzf $BACKUP_PATH -C /
 
-sshpass -p ' ' scp hunter@10.0.3.15:/home/hunter/Desktop/backups/$STAGE/rollback2.txt .
+sshpass -p ' ' scp hunter@192.168.15.23:/home/hunter/Desktop/backups/$STAGE/rollback2.txt .
 var=`tail -n 1 rollback2.txt`
-sshpass -p ' ' scp hunter@10.0.3.15:/home/hunter/Desktop/backups/$STAGE/$var $PROJECT
+sshpass -p ' ' scp hunter@192.168.15.23:/home/hunter/Desktop/backups/$STAGE/$var $PROJECT
 
 rm rollback2.txt
 
