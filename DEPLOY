@@ -124,11 +124,11 @@ esac
 printf "\n"
 
 #PHP Code to CHMOD
-if [ -z "$3" ]; then
+if [ -z "$4" ]; then
        	echo "Enter php folder to chmod: "
 	read phpFilepath #IT490/IT-490
 else 
-	phpFilepath=$3
+	phpFilepath=$4
 fi
 
 #Change file name based on if statement
@@ -151,7 +151,7 @@ fi
 sshpass -p " " ssh $name@$ip bash -c "whoami"
 
 #Copy and Backup version already on system
-sshpass -p " " ssh $name@$ip bash -c "'tar cvpzf /home/$name/Desktop/backups/BACKUP.tar.gz $phpFilepath; exit'"
+#sshpass -p " " ssh $name@$ip bash -c "'tar cvpzf /home/$name/Desktop/backups/BACKUP.tar.gz $phpFilepath; exit'"
 
 printf "\n-\n"
 
@@ -161,7 +161,7 @@ sshpass -p " " rsync -avzh $BACKUP_PATH/$STAGE/$filename $name@$ip:/home/$name -
 printf "\n---\n"
 
 #Extract zip, overwrite old files and Chmod php files (-C extracts to specific directory)"
-sshpass -p " " ssh $name@$ip bash -c "'tar xvzf /home/$name/$filename -C $path; cd $phpFilepath; chmod 755 *; exit'"
+sshpass -p " " ssh $name@$ip bash -c "'tar --overwrite -xvzf /home/$name/$filename -C $path; cd $phpFilepath;chmod 755 *;'"
 
 s="s/^BROKER_HOST.*/BROKER_HOST\ =\ $ipINI/"
 
@@ -170,7 +170,7 @@ while read -r line; do
 #sed -i 's/^BROKER_HOST.*/BROKER_HOST = 192.168.15.10/' testRabbitMQ.ini 
 
 #/dev/null exits standard input and makes sure while loop runs correctly!
-sshpass -p " " ssh $name@$ip bash -c "'sed -i "$s" $line;exit;'" < /dev/null
+sshpass -p " " ssh $name@$ip bash -c "'sed -i "$s" $phpFilepath/$line;exit;'" < /dev/null
 printf "\nSed -i $line"
 done < $INI_CONFIG
 
