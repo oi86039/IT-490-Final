@@ -65,14 +65,17 @@ DB1-PROD)
 DB2-DEV)
     ip=192.168.15.200
     name="anwarrs"
+    STAGE="database2"
     ;;
 DB2-QA)
     ip=192.168.15.29
     name="anwarrs"
+    STAGE="database2"
     ;;
 DB2-PROD)
     ip=192.168.15.30
     name="anwarrs"
+    STAGE="database2"
     ;;
 BE-DEV)
     ip=192.168.15.16
