@@ -1,28 +1,37 @@
 #!/bin/bash
 
-F2DB = "" #Please provide path to php file
+PROJECT_DIR='/home/anwarrs/Desktop/it490/' #Please provide path to project directory
+F2DB='frontToDBServer.php' #Please provide path to php file
+IP='192.168.15.9'
 
-count=0
+count=0 #Count of times ping was unsuccessful (opens server after limit is reached)
+limit=1;
 
+#COntinuously loop and ping to check for master
 while true
 do
-	ping -q -c1 192.168.15.16
+	ping -q -c1 $IP
 
-	if [ $? -eq 0 ]
+	if [ $? -eq 0 ] #$? = return value of the previous command; 0 = transmitted and received
 	then
 		count=0
-	elif [ $? -eq 1 ]
+	elif [ $? -eq 1 ] #1 = transmitted but not received
 	then
 		count=$((count+1))
-	else
+	else		#2 = not transmitted nor received
+		echo "\n"
+		echo "Error. Unable to transmit. Check your internet connection...\n"
 		exit
 	fi
 
-	echo $count
+	#Print count (debug)
+	#echo "$count\n"
 
-	if [ $count -ge 5 ]
+	#If unable to ping 5 times, open server on backup machine
+	if [ $count -ge $limit ]
 	then
 		echo "***No connection, running backup script (fronttoDBServer)***"
+		cd $PROJECT_DIR
 		php $F2DB
 		exit
 	fi
