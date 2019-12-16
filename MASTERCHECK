@@ -1,0 +1,29 @@
+#!/bin/bash
+
+F2DB = "" #Please provide path to php file
+
+count=0
+
+while true
+do
+	ping -q -c1 192.168.15.16
+
+	if [ $? -eq 0 ]
+	then
+		count=0
+	elif [ $? -eq 1 ]
+	then
+		count=$((count+1))
+	else
+		exit
+	fi
+
+	echo $count
+
+	if [ $count -ge 5 ]
+	then
+		echo "***No connection, running backup script (fronttoDBServer)***"
+		php $F2DB
+		exit
+	fi
+done
