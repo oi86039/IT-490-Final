@@ -65,17 +65,17 @@ DB1-PROD)
 DB2-DEV)
     ip=192.168.15.200
     name="anwarrs"
-    STAGE="database2"
+    STAGE="database"
     ;;
 DB2-QA)
     ip=192.168.15.29
     name="anwarrs"
-    STAGE="database2"
+    STAGE="database"
     ;;
 DB2-PROD)
     ip=192.168.15.30
     name="anwarrs"
-    STAGE="database2"
+    STAGE="database"
     ;;
 BE-DEV)
     ip=192.168.15.16
@@ -177,8 +177,31 @@ sshpass -p " " ssh $name@$ip bash -c "'sed -i "$s" $phpFilepath/$line;exit;'" < 
 printf "\nSed -i $line"
 done < $INI_CONFIG
 
-#echo Sed Done?
+#Change frontEnd emailscript to have IP of frontEnd
+if [[ $STAGE == frontEnd ]];
+then
+
+	#Change file name based on if statement
+
+	if [[ $ipIN == *DEV ]]; then
+		echo "DEV"
+		ipINI='192.168.15.7'	
+	elif [[ $ipIN == *QA ]]; then
+		ipINI='192.168.15.6'
+	elif [[ $ipIN == *PROD ]]; then	
+		ipINI='192.168.15.8'
+	else
+		printf "FAAAAAAAAAAAAAK >:(\n"
+		exit
+	fi
+
+	s="s/^ip=.*/ip=$ipINI/"
+	sshpass -p " " ssh $name@$ip bash -c "'sed -i "$s" /var/www/html/IT490/IT-490/emailscript;exit;'" < /dev/null
+	printf "\nSed -i emailscript"
+	
+	#echo Sed Done?
+fi
 
 printf "\n-----\n"
 
-echo Version Pushed to $ip!;
+echo Version Pushed to $ip!
